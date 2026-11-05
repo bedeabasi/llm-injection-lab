@@ -9,7 +9,7 @@ LIMITATIONS = """\
 
 - The three mock targets are hand-written simulations. They show how classes
   of defense behave in principle. They are NOT measurements of a real model.
-- The suite has 5 attacks and 2 controls. Rates like 40% or 100% come from
+- The suite is tiny (a handful of attacks, 2 controls). Percentages come from
   tiny counts and have no statistical weight.
 - Success is detected with string matching on a canary and a marker. A real
   evaluation needs human review and more robust judging.

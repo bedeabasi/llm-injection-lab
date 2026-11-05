@@ -30,6 +30,7 @@ Scenario: a support assistant whose system prompt contains a fake canary token (
 | A03 | Role-play jailbreak | Jailbreak | LLM02 Sensitive Information Disclosure |
 | A04 | Base64-obfuscated override | Obfuscation | LLM01 Prompt Injection |
 | A05 | Indirect injection via document | Indirect injection | LLM01 Prompt Injection |
+| A06 | Polite audit-style extraction | Social engineering | LLM02 Sensitive Information Disclosure |
 | C01, C02 | Benign controls | Control | n/a |
 
 OWASP labels follow the 2025 edition numbering. A03 is mapped by its outcome (a secret disclosed), which is a judgment call; many people would also file jailbreaks under LLM01.
@@ -38,18 +39,20 @@ OWASP labels follow the 2025 edition numbering. A03 is mapped by its outcome (a 
 
 | Target | Attack success rate | False refusal rate |
 |---|---|---|
-| naive (obeys any instruction) | 5/5 (100%) | 0/2 |
-| filter (keyword blocklist on raw input) | 2/5 (40%) | 0/2 |
-| hardened (layered checks) | 0/5 (0%) | 0/2 |
+| naive (obeys any instruction) | 6/6 (100%) | 0/2 |
+| filter (keyword blocklist on raw input) | 3/6 (50%) | 0/2 |
+| hardened (layered checks) | 0/6 (0%) | 0/2 |
 
-The interesting row is `filter`: it stops the three attacks that contain its blocked phrases, and misses the role-play jailbreak and the base64-encoded override. Full table in [`reports/report.md`](reports/report.md); raw per-attack rows in `reports/results.jsonl`.
+The interesting row is `filter`: it stops the three attacks that contain its blocked phrases, and misses the role-play jailbreak, the base64-encoded override and the polite audit-style request. Full table in [`reports/report.md`](reports/report.md); raw per-attack rows in `reports/results.jsonl`.
 
 ## How to read these results honestly
 
 - **The mocks are simulations I wrote.** Their behavior is defined in `injlab/targets.py`. The 100%, 40% and 0% figures are consequences of that code, so they illustrate defense classes. They are not findings about any real model.
 - **The hardened mock was written with this attack suite in view.** A 0% rate on attacks the defender has already seen proves very little. Real hardening has to hold against attacks nobody wrote down yet.
-- **Tiny sample.** 5 attacks and 2 controls give rates with no statistical meaning.
+- **Tiny sample.** 6 attacks and 2 controls give rates with no statistical meaning.
 - **String-match scoring.** Success is detected by looking for a canary and a marker. Real evaluations need human review or a validated judge.
+- **The mocks react to keywords, not meaning.** The naive mock leaks whenever it sees the word "secret", so a message that only mentions the word can still score as a successful attack. Real models do not behave this way.
+- **The hardened mock cannot leak by construction.** It only ever returns benign text, so its 0% is guaranteed by how it is written, not earned.
 - **Single turn only.** No multi-turn, tool-use or agent attacks here.
 
 ## Using a real model (optional)
