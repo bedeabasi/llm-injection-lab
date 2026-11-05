@@ -86,9 +86,6 @@ reports/       sample output
 
 Part of a small series on LLM application security. Planned follow-ups: indirect injection in a retrieval pipeline, least-privilege tool use for agents, and detection rules over the logs this harness produces.
 
-## Notes on authorship
-
-Built with AI assistance (Claude) and reviewed, run and tested by the author. Everything in the sample report was produced by the code in this repository.
 
 ## License
 
